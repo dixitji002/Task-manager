@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-
+// Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
@@ -22,18 +22,23 @@ app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
 // Import Routes
 import authRouter from "./routes/auth.route.js";
-import taskRouter from "./routes/task.route.js"; 
+import taskRouter from "./routes/task.route.js";
 
 // Use Routes
 app.use("/api/auth", authRouter);
 app.use("/api/task", taskRouter);
+
+// Root route
+app.get("/", (req, res) => {
+  res.send("Welcome to the Task Manager API");
+});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
 
-  return res.status(statusCode).json({
+  res.status(statusCode).json({
     success: false,
     statusCode,
     message,
